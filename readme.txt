@@ -1,4 +1,4 @@
-Abhängigkeit zu SWFTools!
+Dependent to the lastest Version of SWFTools Beta 3x-Beta5
 
 1. Download and install modul as usual 
 2. Download GoSWF at: www.gludion.com/go/
