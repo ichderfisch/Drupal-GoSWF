@@ -1,0 +1,11 @@
+name =  GoSWF
+description = Enables support for the GoSWF SGF player.
+package = SWF Tools
+dependencies[] = swftools
+core = 6.x
+
+version = "6.x-3.0-beta5"
+core = "6.x"
+project = "swftools"
+datestamp = "1240829764"
+

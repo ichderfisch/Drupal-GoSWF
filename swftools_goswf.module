@@ -1,0 +1,146 @@
+<?php
+
+
+/**
+ * Implementation of hook_swftools_methods().
+ */
+
+function swftools_goswf_swftools_methods() {
+
+  $goswf = array(
+    'module'      => 'swftools_goswf',
+    'title'       => t('GoSWF'),
+    'download'    => 'http://www.gludion.com/go/',
+    'height'      => 480,
+    'width'       => 600,
+    'library'     => swftools_get_library('goswf') . '/goswf.swf'
+  );
+
+  $methods['media_list']['goswf'] = $goswf;
+
+  return $methods;
+
+}
+
+/**
+ * Implementation of hook_menu().
+ *
+ * Items such as access control are set by swftools automatically. This is not a
+ * "true" hook, but the contents returned by this function are merged with
+ * swftools_menu() to provide the complete menu structure for SWF Tools.
+ */
+
+function swftools_goswf_menu() {
+  $items['admin/settings/swftools/goswf'] = array(
+    'title' => 'GoSWF',
+    'description' => 'Settings for '. l('GoSWF', 'http://www.gludion.com/go/') .'.',
+    'access arguments' => array('administer flash'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('swftools_goswf_admin_form'),
+    'file' => 'swftools_goswf.admin.inc',
+  );
+
+  return $items;
+}
+
+
+/**
+ * Returns an array of default settings for the player.
+ */
+
+function _swftools_goswf_settings() {
+
+  $defaults = array(
+    'height'         => 480,
+    'width'          => 600,
+    'bg'			 => '',
+    'nav'			 => '',
+  );
+
+  // Retrieve settings from the database if available
+  $saved = variable_get('swftools_goswf', $defaults);
+
+  // Return result
+  return $saved;
+
+}
+
+
+
+/**
+ * Implementation of hook_swftools_preprocess_[player]().
+ */
+function swftools_goswf_swftools_preprocess_goswf(&$data) {
+
+  // Retreive default goswf settings
+  $saved_settings = _swftools_goswf_flashvars();
+
+  // Combine user and admin defaults, overwriting defaults.
+  $data['flashvars'] = array_merge($saved_settings, $data['flashvars']);
+
+  // Attach file url of the content to display to flashvars
+  // Absolute Adresse wird benötigt, ansonsten erkennt er die Datei nicht (GoSWF Version 1.9)
+  $data['flashvars']['url'] = 'http://'.$_SERVER['SERVER_NAME'].'/'.$data['othervars']['file_url'];
+
+}
+
+
+/**
+ * Returns an array of flashvar defaults for the player.
+ */
+function _swftools_goswf_flashvars() {
+
+  // Cache this
+  static $settings = array();
+
+  // If $settings is empty then retrieve the settings
+  if (!$settings) {
+
+    // Get saved settings for this method.
+    $settings = _swftools_goswf_settings();
+
+    // Filter out unassigned or default entries
+    $settings = array_diff($settings, array('', 'default'));
+
+  }
+
+  // Return the settings
+  return $settings;
+
+}
+
+
+
+
+/*
+ * Implementation of hook_swftools_variable_mapping.
+ *
+ */
+function swftools_goswf_swftools_variable_mapping() {
+  return array(
+    'goswf' => array(
+		'nav' => 'flashvars',
+		'bg'  => 'flashvars',
+		'height' => 'flashvars',
+		'width' => 'flashvars',
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_help().
+ */
+
+function swftools_goswf_help($path, $arg) {
+  switch ($path) {
+    case 'admin/settings/swftools/goswf':
+      return '<p>' . t('Welcome to the settings of GoSWF. Here you can customize
+                      the look and feel of your player. Do not forget to download
+                      <a href="@goswf">GoSWF</a> first and upload it in the Libraries
+					  Folder. Check out the documentation for further information.',
+					  array('@goswf' => 'http://www.gludion.com/go/')
+					  ) .
+			 '</p>';
+  }
+}
+
