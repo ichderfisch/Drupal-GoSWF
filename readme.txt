@@ -1,8 +1,8 @@
 Abhängigkeit zu SWFTools!
 
-1. Modul in den Ordner */swftools/GoSWF kopieren
-2. GoSWF runterladen
-3. goswf.js und goswf.swf in den Ordner */swftools/shared/goswf entpacken.
-4. SWFTools und GoSWF aktivieren
-5. Filehandling einstellen unter admin/settings/swftools/handling (Default player for a list of mixed media)
-
+1. Download and install modul as usual 
+2. Download GoSWF at: www.gludion.com/go/
+3. copy goswf.swf in sites/all/libraries/goswf
+4. aktivate SWFTools & GoSWF
+5. Setup filehandling: admin/settings/swftools/handling (Default player for a list of mixed media)
+6. Use GoSWF as any other SWFTools fileplayer.
